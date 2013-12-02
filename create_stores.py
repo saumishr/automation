@@ -1,4 +1,3 @@
-from elementtree import ElementTree as ET
 import os
 import sys
 import xlrd
