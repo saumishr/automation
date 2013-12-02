@@ -12,6 +12,7 @@ if __name__ == "__main__":
 	from userProfile.models import UserProfile
 	from mezzanine.blog.models import BlogPost, BlogParentCategory, BlogCategory
 	from django.template.defaultfilters import slugify
+	from django.contrib.auth.models import Group
 	import uuid
 	from django.conf import settings
 	from django.core.files import File
@@ -58,12 +59,11 @@ if __name__ == "__main__":
 		''' Little helper to save a file
 		'''
 		filename = file.name
-
 		# Enable this code to save the file with uid.
 		# new_filename =  u'{name}.{ext}'.format(	name=uuid.uuid4().hex,
 		# 										ext=os.path.splitext(filename)[1].strip('.'))
 		# else
-		new_filename = filename		
+		new_filename =  os.path.basename(filename)
 
 		dir_path =  '%s/%s' % (MEDIA_ROOT, str(path))
 
@@ -71,7 +71,8 @@ if __name__ == "__main__":
 			os.makedirs(dir_path)
 
 		save_path = os.path.join(dir_path, new_filename)
-
+		print "save path: ", save_path
+		print "filename: ", new_filename
 		with open(save_path, 'wb+') as destination:
 			for chunk in file.chunks():
 				destination.write(chunk)
@@ -164,6 +165,11 @@ if __name__ == "__main__":
 			print "username:", username, " email:", email, " password: ", password
 			new_user = User.objects.create_user(username, email, password)
 			new_user.first_name = username
+			
+			new_user.is_staff = True
+			group = Group.objects.get(name='StoreOwners') 
+			group.user_set.add(new_user)
+
 			new_user.save()
 			user_profile = UserProfile.objects.get(user=new_user)
 			user_profile.gender = 'male'
