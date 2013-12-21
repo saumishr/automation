@@ -15,6 +15,7 @@ if __name__ == "__main__":
 	import uuid
 	from django.conf import settings
 	from django.core.files import File
+	from actstream import actions
 
 	MEDIA_URL = "static/media/"
 
@@ -224,6 +225,8 @@ if __name__ == "__main__":
 			print 'new logo is set...'
 			blog_post.featured_image = new_file_path
 		blog_post.save()
+		if blog_post and new_user:
+			actions.follow(new_user, blog_post, send_action=False, actor_only=False) 
 
 	"""
 		Main()
