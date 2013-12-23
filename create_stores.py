@@ -28,7 +28,7 @@ if __name__ == "__main__":
 	"""
 	XLS_CONTAINER 				= 'assets/xls_processed/'
 	LOGOS_CONTAINER 			= 'assets/logos/'
-	PASSWORD_FILE_PATH			= '/home/saumishr/passcodes/passwords.xls'
+	PASSWORD_FILE_PATH			= 'passwords.xls'
 	WEBSITE_URL_INDEX 			= 1
 	WEBSITE_NAME_INDEX 			= 2
 	EMAIL_INDEX 				= 3
