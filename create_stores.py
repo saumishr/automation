@@ -16,6 +16,7 @@ if __name__ == "__main__":
 	from django.conf import settings
 	from django.core.files import File
 	from actstream import actions
+	from mezzanine.generic.models import AssignedKeyword, Keyword
 
 	MEDIA_URL = "static/media/"
 
@@ -34,6 +35,7 @@ if __name__ == "__main__":
 	WEBSITE_NAME_INDEX 			= 2
 	EMAIL_INDEX 				= 3
 	LOGO_FILE_NAME_INDEX 		= 4
+	TAG_INDEX					= 7
 	WISHRADIO_CATEGORY_INDEX 	= 8
 	STORE_DESCRIPTION_INDEX 	= 10
 	MAX_PASSWORD_CHARACTERS		= 5
@@ -91,6 +93,7 @@ if __name__ == "__main__":
 		email 			= store_details[EMAIL_INDEX]
 		description 	= store_details[STORE_DESCRIPTION_INDEX]
 		logo_name 		= store_details[LOGO_FILE_NAME_INDEX]
+		tags			= store_details[TAG_INDEX]
 
 		print '------------------------------------------------------------------------------------------'
 		print 'Store: ', store_name
@@ -224,6 +227,17 @@ if __name__ == "__main__":
 
 			print 'new logo is set...'
 			blog_post.featured_image = new_file_path
+
+		blogpost_tags = sheet.col_values(TAG_INDEX, start_rowx=start_index, end_rowx=end_index)
+		blogpost_tags = filter(None, blogpost_tags)
+
+		for kw in blogpost_tags:
+			kw = kw.strip()
+			if kw:
+				keyword, created = Keyword.objects.get_or_create(title=kw)
+				if kw not in [k.keyword.title for k in blog_post.keywords.all()]:
+					blog_post.keywords.add(AssignedKeyword(keyword=keyword))
+		
 		blog_post.save()
 		if blog_post and new_user:
 			actions.follow(new_user, blog_post, send_action=False, actor_only=False) 
