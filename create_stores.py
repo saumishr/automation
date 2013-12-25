@@ -3,6 +3,7 @@ import sys
 import xlrd
 import xlwt
 from os import walk
+import gc
 
 if __name__ == "__main__":
 	# set your django setting module here
@@ -78,6 +79,7 @@ if __name__ == "__main__":
 		with open(save_path, 'wb+') as destination:
 			for chunk in file.chunks():
 				destination.write(chunk)
+			destination.close()
 
 		return os.path.join(path, new_filename)
 
@@ -225,7 +227,7 @@ if __name__ == "__main__":
 					print 'Removed old logo...'
 					os.remove(old_file_path)
 
-			print 'new logo is set...'
+			print 'new logo is set...:', new_file_path
 			blog_post.featured_image = new_file_path
 
 		blogpost_tags = sheet.col_values(TAG_INDEX, start_rowx=start_index, end_rowx=end_index)
@@ -241,6 +243,7 @@ if __name__ == "__main__":
 		blog_post.save()
 		if blog_post and new_user:
 			actions.follow(new_user, blog_post, send_action=False, actor_only=False) 
+		gc.collect()
 
 	"""
 		Main()
