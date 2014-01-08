@@ -24,8 +24,10 @@ if __name__ == "__main__":
 		parent_category = None
 		parent_category_list = BlogParentCategory.objects.filter(title=categories[PARENT_CATEGORY_INDEX])
 		if len(parent_category_list) == 0:
-			parent_category = BlogParentCategory(slug=slugify(categories[PARENT_CATEGORY_INDEX]))
-			parent_category.title = categories[PARENT_CATEGORY_INDEX]
+			parent_category_string = categories[PARENT_CATEGORY_INDEX]
+			parent_category_string = parent_category_string.replace('/', '')
+			parent_category = BlogParentCategory(slug=slugify(parent_category_string))
+			parent_category.title = parent_category_string
 			parent_category.save()
 		else:
 			parent_category = parent_category_list[0]
@@ -33,6 +35,7 @@ if __name__ == "__main__":
 		sub_categories = sheet.col_values(SUB_CATEGORIES_INDEX, start_rowx=start_index, end_rowx=end_index)
 
 		for sub_category in sub_categories:
+			sub_category = sub_category.replace('/','')
 			sub_category_list = BlogCategory.objects.filter(title=sub_category)
 			if len(sub_category_list) == 0:
 				sub_category_obj = BlogCategory(parent_category=parent_category, slug=slugify(sub_category))

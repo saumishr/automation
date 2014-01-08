@@ -3,6 +3,7 @@ import sys
 import xlrd
 import xlwt
 from os import walk
+import gc
 
 if __name__ == "__main__":
 	# set your django setting module here
@@ -17,6 +18,7 @@ if __name__ == "__main__":
 	from django.core.files import File
 	from actstream import actions
 	from mezzanine.generic.models import AssignedKeyword, Keyword
+	from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
 	MEDIA_URL = "static/media/"
 
@@ -78,6 +80,7 @@ if __name__ == "__main__":
 		with open(save_path, 'wb+') as destination:
 			for chunk in file.chunks():
 				destination.write(chunk)
+			destination.close()
 
 		return os.path.join(path, new_filename)
 
@@ -152,6 +155,9 @@ if __name__ == "__main__":
 		"""
 			users will be created with default username: store_name + '_admin'
 		"""
+		if len(store_name) > 24:
+			store_name = store_name[0:23]
+
 		username = store_name + '_admin'
 		user_list = User.objects.filter(username=username)
 		new_user = None
@@ -188,7 +194,7 @@ if __name__ == "__main__":
 		blog_post = None
 		blog_post_list = BlogPost.objects.filter(user=new_user)
 		if len(blog_post_list) == 0:
-			blog_post = BlogPost(web_url=url, content=description, title=store_name, user=new_user)
+			blog_post = BlogPost.objects.create(web_url=url, content=description, title=store_name, user=new_user, status=CONTENT_STATUS_PUBLISHED)
 			blog_post.save()
 		else:
 			print 'Store ', store_name, ' already exists...'
@@ -225,22 +231,23 @@ if __name__ == "__main__":
 					print 'Removed old logo...'
 					os.remove(old_file_path)
 
-			print 'new logo is set...'
+			print 'new logo is set...:', new_file_path
 			blog_post.featured_image = new_file_path
 
+		blog_post.save()
 		blogpost_tags = sheet.col_values(TAG_INDEX, start_rowx=start_index, end_rowx=end_index)
 		blogpost_tags = filter(None, blogpost_tags)
 
 		for kw in blogpost_tags:
-			kw = kw.strip()
+			kw = kw.strip().lower()
 			if kw:
-				keyword, created = Keyword.objects.get_or_create(title=kw)
-				if kw not in [k.keyword.title for k in blog_post.keywords.all()]:
-					blog_post.keywords.add(AssignedKeyword(keyword=keyword))
-		
-		blog_post.save()
+				keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
+				blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
+
+		blog_post = BlogPost.objects.get(id=blog_post.id)
 		if blog_post and new_user:
 			actions.follow(new_user, blog_post, send_action=False, actor_only=False) 
+		gc.collect()
 
 	"""
 		Main()
