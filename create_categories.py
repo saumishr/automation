@@ -35,19 +35,24 @@ if __name__ == "__main__":
 		sub_categories = sheet.col_values(SUB_CATEGORIES_INDEX, start_rowx=start_index, end_rowx=end_index)
 
 		for sub_category in sub_categories:
+			if sub_category == '':
+				sub_category = parent_category.title
+				
 			sub_category = sub_category.replace('/','')
 			sub_category_list = BlogCategory.objects.filter(title=sub_category)
 			if len(sub_category_list) == 0:
-				sub_category_obj = BlogCategory(parent_category=parent_category, slug=slugify(sub_category))
-				sub_category_obj.title = sub_category 
+				sub_category_obj = BlogCategory(slug=slugify(sub_category), title=sub_category)
 				sub_category_obj.save()
+				sub_category_obj.parent_category.add(parent_category)
 			else:
 				sub_category_obj = sub_category_list[0]
-				if sub_category_obj.parent_category.title == parent_category.title:
-					print parent_category, " already has a sub category: ", sub_category
-				else:
-					sub_category_obj.parent_category = parent_category
-				sub_category_obj.save()
+				sub_category_obj.parent_category.add(parent_category)
+				print sub_category_obj.title, "is now listed under: ", sub_category_obj.parent_category.all(), "\n"
+				#if sub_category_obj.parent_category.title == parent_category.title:
+				#	print parent_category, " already has a sub category: ", sub_category
+				#else:
+				#	sub_category_obj.parent_category = parent_category
+				# sub_category_obj.save()
 
 
 	sheets = workbook.sheets()
