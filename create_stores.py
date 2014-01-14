@@ -261,6 +261,11 @@ if __name__ == "__main__":
 	print "Indexing files : ", f
 	print '------------------------------------------------------------------------------------------'
 
+	passbook = xlwt.Workbook()
+	passsheet = passbook.add_sheet('passwords')
+	passsheet.write(0, 0, 'username')
+	passsheet.write(0, 1, 'password')
+
 	for filename in f:
 		print '------------------------------------------------------------------------------------------'
 		print 'started Processing file: ' + filename
@@ -275,10 +280,6 @@ if __name__ == "__main__":
 		"""
 			passbook is the xls file generated in the end. This contains all the login credentials of the store owners.
 		"""
-		passbook = xlwt.Workbook()
-		passsheet = passbook.add_sheet('passwords')
-		passsheet.write(0, 0, 'username')
-		passsheet.write(0, 1, 'password')
 
 		sheets = workbook.sheets()
 		
