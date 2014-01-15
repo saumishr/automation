@@ -28,18 +28,20 @@ if __name__ == "__main__":
 		serial_pointer = 1
 
 		blog_posts = BlogPost.objects.all()
+		parent_categories = BlogParentCategory.objects.all()
 
 		for blog_post in blog_posts:
 			store_count += 1
 			print 'Processing Store: ', blog_post.title
 			passsheet.write(serial_pointer, 0, store_count)
 			passsheet.write(serial_pointer, 1, blog_post.title)
-			parent_categories = BlogParentCategory.objects.all()
 			hasCategories = False
+
 			for parent_category in parent_categories:
 				sub_categories_list = []
 				blog_post_added_sub_categories = blog_post.categories.all()
 				sub_categories = BlogCategory.objects.all().filter(parent_category=parent_category)
+				
 				for sub_category in sub_categories:
 					if sub_category in blog_post_added_sub_categories:
 						sub_categories_list.append(sub_category.title)
