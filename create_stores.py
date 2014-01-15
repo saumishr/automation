@@ -40,7 +40,7 @@ if __name__ == "__main__":
 	TAG_INDEX					= 7
 	WISHRADIO_CATEGORY_INDEX 	= 8
 	STORE_DESCRIPTION_INDEX 	= 10
-	MAX_PASSWORD_CHARACTERS		= 5
+	MAX_PASSWORD_CHARACTERS		= 8
 
 	store_count = 0
 
