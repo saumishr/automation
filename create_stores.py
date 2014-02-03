@@ -38,7 +38,7 @@ if __name__ == "__main__":
 	EMAIL_INDEX 				= 3
 	LOGO_FILE_NAME_INDEX 		= 4
 	TAG_INDEX					= 7
-	WISHRADIO_CATEGORY_INDEX 	= 8
+	#WISHRADIO_CATEGORY_INDEX 	= 8
 	STORE_DESCRIPTION_INDEX 	= 10
 	MAX_PASSWORD_CHARACTERS		= 8
 
@@ -148,9 +148,9 @@ if __name__ == "__main__":
 				Rest all the issues are handled manually as they are not genric enough to be handled in automated script.
 			"""
 
-		wr_categories = sheet.col_values(WISHRADIO_CATEGORY_INDEX, start_rowx=start_index, end_rowx=end_index)
-		wr_categories = filter(None, wr_categories)
-		print 'categories: ', wr_categories
+		#wr_categories = sheet.col_values(WISHRADIO_CATEGORY_INDEX, start_rowx=start_index, end_rowx=end_index)
+		#wr_categories = filter(None, wr_categories)
+		#print 'categories: ', wr_categories
 
 		"""
 			users will be created with default username: store_name + '_admin'
@@ -200,19 +200,19 @@ if __name__ == "__main__":
 			print 'Store ', store_name, ' already exists...'
 			blog_post = blog_post_list[0]
 
-		print 'Adding categories...'
-		"""
-		ToDo: Need to check the existing list of categories with cateories mentioned in the xls.
-		Removed categories should also be updated in the blog_post object.
-		"""
-		for wr_parent_category in wr_categories:
-			parent_category_list = BlogParentCategory.objects.filter(title=wr_parent_category)
-			if len(parent_category_list) != 0:
-				parent_category = parent_category_list[0]
-				sub_categories = BlogCategory.objects.all().filter(parent_category=parent_category)
-				for sub_category in sub_categories:
-					if not blog_post.categories.all().filter(slug=slugify(sub_category)).exists():
-						blog_post.categories.add(sub_category)
+		# print 'Adding categories...'
+		# """
+		# ToDo: Need to check the existing list of categories with cateories mentioned in the xls.
+		# Removed categories should also be updated in the blog_post object.
+		# """
+		#for wr_parent_category in wr_categories:
+		#	parent_category_list = BlogParentCategory.objects.filter(title=wr_parent_category)
+		#	if len(parent_category_list) != 0:
+		#		parent_category = parent_category_list[0]
+		#		sub_categories = BlogCategory.objects.all().filter(parent_category=parent_category)
+		#		for sub_category in sub_categories:
+		#			if not blog_post.categories.all().filter(slug=slugify(sub_category)).exists():
+		#				blog_post.categories.add(sub_category)
 
 		print 'Attaching logo with the store...'				
 		if logo_name:
