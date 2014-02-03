@@ -34,29 +34,27 @@ if __name__ == "__main__":
 	def create_category_mapping(sheet, start_index, end_index, store_count, current_tag):
 		store_details 	= sheet.row_values(start_index)
 		store_name 		= store_details[STORE_NAME_INDEX]
-		print "mapping store: ", store_name
-		try:
-			blog_post 		= BlogPost.objects.get(title=store_name)
-			blog_post.categories.clear()
-			
-			sub_categories = sheet.col_values(WISHRADIO_SUBCATEGORY_INDEX, start_rowx=start_index, end_rowx=end_index)
-			sub_categories = filter(None, sub_categories)
+		print "mapping store: ",store_count,":", store_name
 
-			for sub_category in sub_categories:
-				sub_category_list = BlogCategory.objects.filter(title=sub_category)
-				if len(sub_category_list) != 0:
-					sub_category = sub_category_list[0]
-					blog_post.categories.add(sub_category)
+		blog_post 		= BlogPost.objects.get(title=store_name)
+		blog_post.categories.clear()
 
-			blog_post.save()
+		sub_categories = sheet.col_values(WISHRADIO_SUBCATEGORY_INDEX, start_rowx=start_index, end_rowx=end_index)
+		sub_categories = filter(None, sub_categories)
 
-			for kw in sub_categories:
-				kw = kw.strip().lower()
-				if kw:
-					keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
-					blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
-		except:
-			pass
+		for sub_category in sub_categories:
+			sub_category_list = BlogCategory.objects.filter(title=sub_category)
+			if len(sub_category_list) != 0:
+				sub_category = sub_category_list[0]
+				blog_post.categories.add(sub_category)
+
+		blog_post.save()
+
+		for kw in sub_categories:
+			kw = kw.strip().lower()
+			if kw:
+				keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
+				blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
 
 		gc.collect()
 
