@@ -37,7 +37,8 @@ if __name__ == "__main__":
 		print "mapping store: ", store_name
 		try:
 			blog_post 		= BlogPost.objects.get(title=store_name)
-
+			blog_post.categories.clear()
+			
 			sub_categories = sheet.col_values(WISHRADIO_SUBCATEGORY_INDEX, start_rowx=start_index, end_rowx=end_index)
 			sub_categories = filter(None, sub_categories)
 
