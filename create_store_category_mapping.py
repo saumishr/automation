@@ -56,7 +56,7 @@ if __name__ == "__main__":
 				if kw:
 					keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
 					blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
-		except e:
+		except Exception as e:
 			print e
 			print "Encountered error with:", store_name
 			pass
