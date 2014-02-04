@@ -36,25 +36,30 @@ if __name__ == "__main__":
 		store_name 		= store_details[STORE_NAME_INDEX]
 		print "mapping store: ",store_count,":", store_name
 
-		blog_post 		= BlogPost.objects.get(title=store_name)
-		blog_post.categories.clear()
+		try:
+			blog_post 		= BlogPost.objects.get(title=store_name)
+			blog_post.categories.clear()
 
-		sub_categories = sheet.col_values(WISHRADIO_SUBCATEGORY_INDEX, start_rowx=start_index, end_rowx=end_index)
-		sub_categories = filter(None, sub_categories)
+			sub_categories = sheet.col_values(WISHRADIO_SUBCATEGORY_INDEX, start_rowx=start_index, end_rowx=end_index)
+			sub_categories = filter(None, sub_categories)
 
-		for sub_category in sub_categories:
-			sub_category_list = BlogCategory.objects.filter(title=sub_category)
-			if len(sub_category_list) != 0:
-				sub_category = sub_category_list[0]
-				blog_post.categories.add(sub_category)
+			for sub_category in sub_categories:
+				sub_category_list = BlogCategory.objects.filter(title=sub_category)
+				if len(sub_category_list) != 0:
+					sub_category = sub_category_list[0]
+					blog_post.categories.add(sub_category)
 
-		blog_post.save()
+			blog_post.save()
 
-		for kw in sub_categories:
-			kw = kw.strip().lower()
-			if kw:
-				keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
-				blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
+			for kw in sub_categories:
+				kw = kw.strip().lower()
+				if kw:
+					keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
+					blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
+		except e:
+			print e
+			print "Encountered error with:", store_name
+			pass
 
 		gc.collect()
 
