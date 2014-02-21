@@ -21,7 +21,7 @@ if __name__ == "__main__":
 	Global Configurations.
 	Please do not change these indexes. These are strictly as per the xls.
 	"""
-	CATEGORIES_FILE_PATH			= '/home/saumishr/passcodes/wishradio_categories.xls'
+	CATEGORIES_FILE_PATH			= 'wishradio_categories.xls'
 
 	def fetch_category_relations():
 		store_count = 0
