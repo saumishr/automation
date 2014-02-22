@@ -43,6 +43,9 @@ if __name__ == "__main__":
 
 		store_name 		= store_details[WEBSITE_NAME_INDEX]
 
+		if len(store_name) > 24:
+			store_name = store_name[0:23]
+
 		print '------------------------------------------------------------------------------------------'
 		print 'tagging store: ', store_name
 		print '------------------------------------------------------------------------------------------'

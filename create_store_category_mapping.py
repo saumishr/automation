@@ -34,6 +34,10 @@ if __name__ == "__main__":
 	def create_category_mapping(sheet, start_index, end_index, store_count, current_tag):
 		store_details 	= sheet.row_values(start_index)
 		store_name 		= store_details[STORE_NAME_INDEX]
+		
+		if len(store_name) > 24:
+			store_name = store_name[0:23]
+
 		print "mapping store: ",store_count,":", store_name
 
 		try:
