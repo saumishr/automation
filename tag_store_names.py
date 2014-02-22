@@ -14,7 +14,6 @@ if __name__ == "__main__":
 			blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
 			print "Added keyword: ", title
 
-
 	"""
 		Main()
 	"""

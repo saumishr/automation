@@ -237,12 +237,24 @@ if __name__ == "__main__":
 		blog_post.save()
 		blogpost_tags = sheet.col_values(TAG_INDEX, start_rowx=start_index, end_rowx=end_index)
 		blogpost_tags = filter(None, blogpost_tags)
+		ctype = ContentType.objects.get_for_model(BlogPost)
+		object_pk = blog_post.id
 
+		# for kw in blogpost_tags:
+		# 	kw = kw.strip().lower()
+		# 	if kw:
+		# 		keyword = Keyword.objects.get_or_create(title=kw)[0]
+		# 		blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
 		for kw in blogpost_tags:
 			kw = kw.strip().lower()
 			if kw:
-				keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
-				blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
+				keyword = Keyword.objects.get_or_create(title=kw)[0]
+				if keyword:
+					assignedKeyword = AssignedKeyword.objects.all().filter(keyword=keyword, content_type=ctype, object_pk=object_pk)
+				
+					if not assignedKeyword:
+						assignedKeyword = AssignedKeyword(keyword=keyword)
+						blog_post.keywords.add(assignedKeyword)
 
 		blog_post = BlogPost.objects.get(id=blog_post.id)
 		if blog_post and new_user:
