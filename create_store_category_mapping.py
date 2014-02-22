@@ -44,12 +44,18 @@ if __name__ == "__main__":
 			sub_categories = filter(None, sub_categories)
 
 			for sub_category in sub_categories:
-				sub_category_list = BlogCategory.objects.filter(title=sub_category)
-				if len(sub_category_list) != 0:
-					sub_category = sub_category_list[0]
-					blog_post.categories.add(sub_category)
+				try:
+					sub_category = BlogCategory.objects.get(title=sub_category)
+					if sub_category:
+						blog_post.categories.add(sub_category)
+				except Exception as ex:
+					print ex
+					print sub_category, ' doesnt exist'
+					raise SystemExit(0)
 
 			blog_post.save()
+			blog_post.keywords.clear()
+			blog_post		= BlogPost.objects.get(title=store_name)
 
 			for kw in sub_categories:
 				kw = kw.strip().lower()
