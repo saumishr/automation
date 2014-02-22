@@ -54,14 +54,6 @@ if __name__ == "__main__":
 					raise SystemExit(0)
 
 			blog_post.save()
-			blog_post.keywords.clear()
-			blog_post		= BlogPost.objects.get(title=store_name)
-
-			for kw in sub_categories:
-				kw = kw.strip().lower()
-				if kw:
-					keyword_id = Keyword.objects.get_or_create(title=kw)[0].id
-					blog_post.keywords.add(AssignedKeyword(keyword_id=keyword_id))
 		except Exception as e:
 			print e
 			print "Encountered error with:", store_name
