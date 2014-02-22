@@ -46,9 +46,7 @@ if __name__ == "__main__":
 		if len(store_name) > 24:
 			store_name = store_name[0:23]
 
-		print '------------------------------------------------------------------------------------------'
-		print 'tagging store: ', store_name
-		print '------------------------------------------------------------------------------------------'
+		print store_count, ' tagging store: ', store_name
 
 		blog_post = None
 		blog_post = BlogPost.objects.get(title=store_name)
