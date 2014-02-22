@@ -79,6 +79,14 @@ if __name__ == "__main__":
 						assignedKeyword = AssignedKeyword(keyword=keyword)
 						blog_post.keywords.add(assignedKeyword)
 
+		title = blog_post.title
+		keyword = Keyword.objects.get_or_create(title=title)[0]
+		if keyword:
+			assignedKeywords = AssignedKeyword.objects.filter(keyword=keyword, content_type=ctype, object_pk=object_pk)
+			if len(assignedKeywords) == 0:
+				assignedKeyword = AssignedKeyword(keyword=keyword)
+				blog_post.keywords.add(assignedKeyword)
+
 		gc.collect()
 
 	"""
