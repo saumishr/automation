@@ -101,7 +101,10 @@ if __name__ == "__main__":
 	print '------------------------------------------------------------------------------------------'
 	print "Indexing files : ", f
 	print '------------------------------------------------------------------------------------------'
-
+	
+	Keyword.objects.all().delete()
+	AssignedKeyword.objects.all().delete()
+	
 	for filename in f:
 		print '------------------------------------------------------------------------------------------'
 		print 'started Processing file: ' + filename
